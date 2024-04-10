@@ -1063,6 +1063,8 @@ class ItemLinks(OptionList):
             Optional("local_items"): [And(str, len)],
             Optional("non_local_items"): [And(str, len)],
             Optional("link_replacement"): Or(None, bool),
+            Optional("exclusive_group_generation"): Or(None, bool),
+            Optional("exclusive_player_generation"): Or(None, bool),
         }
     ])
 
