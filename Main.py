@@ -17,7 +17,6 @@ from Utils import __version__, output_path, version_tuple
 from settings import get_settings
 from worlds import AutoWorld
 from worlds.generic.Rules import exclusion_rules, locality_rules
-from ItemLink import calculate_item_links
 
 __all__ = ["main"]
 
@@ -206,7 +205,7 @@ def main(args, seed=None, baked_server_options: Optional[Dict[str, object]] = No
         multiworld.itempool[:] = new_items
 
     # Moved the Item Link calculation to its own function to allow for easier testing.
-    multiworld = calculate_item_links(multiworld)
+    multiworld.calculate_item_links()
 
     if any(multiworld.item_links.values()):
         multiworld._all_state = None
