@@ -17,9 +17,10 @@ from typing import Any, Callable, Dict, Iterable, Iterator, List, NamedTuple, Op
 import NetUtils
 import Options
 import Utils
+from worlds import AutoWorld
 
-if typing.TYPE_CHECKING:
-    from worlds import AutoWorld
+# if typing.TYPE_CHECKING:
+    # from worlds import AutoWorld
 
 
 class Group(TypedDict, total=False):
