@@ -42,8 +42,8 @@ class ItemLinkTestBase(MultiworldTestBase):
         complete_item_list = world.item_name_groups["Everything"]
         for item in self.multiworld.itempool:
             if item.name in complete_item_list and \
-                item.classification == ItemClassification.progression:
-                    item_list.append(item.name)
+            item.classification == ItemClassification.progression:
+                item_list.append(item.name)
         return item_list
 
 
@@ -51,9 +51,11 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
     def test_itemlink_edge_cases(self) -> None:
         """Tests that various combinations of settings are loaded correctly"""
         for case in edge_cases:
-            with self.subTest(game=case['Game'], description=case['Description']):
+            gameName : str = case['Game']
+            with self.subTest(game=gameName, description=case['Description']):
                 # Prepare our worlds and Set the Item Link information
-                worldBase = AutoWorldRegister.world_types[case['Game']]
+                
+                worldBase = AutoWorldRegister.world_types[gameName]
                 worldOne = copy.deepcopy(worldBase)
                 worldOne.options.item_links = ItemLinks([case['LinkOne']])
                 worldTwo = copy.deepcopy(worldBase)
@@ -68,11 +70,11 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                                  f"ItemLinkTest group not found in {self.multiworld.groups}")
                 link_group = [group for group in self.multiworld.groups.values() if group['name'] == "ItemLinkTest"][0]
 
-                self.assertEqual(link_group['game'], case['Game'], 
-                                 f"Game is not set correctly for {case['Game']}")
-                self.assertEqual(link_group['item_pool'], case['ExpectedLinkedItems'], 
-                                 f"Item pool is not set correctly for {case['Game']}")
-    
+                self.assertEqual(link_group['game'], gameName,
+                                 f"Game is not set correctly for {gameName}")
+                self.assertEqual(link_group['item_pool'], case['ExpectedLinkedItems'],
+                                 f"Item pool is not set correctly for {gameName}")
+
 
     def test_all_games_items_link_defaults(self) -> None:
         """Tests that all worlds are able to link items to each other in a multiworld."""
@@ -88,12 +90,12 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                 if len(linked_items) == 0:
                     continue            # if there are no progression items, just skip this test
 
-                for world in self.multiworld.worlds.values(): # Set some basic options on worlds in the multiworld
+                for world in self.multiworld.worlds.values():   # Set some basic options on worlds in the multiworld
                     world.options.accessibility.value = Accessibility.option_locations
-                    world.options.item_links = ItemLinks([{ # Define a basic itemlink
-                        'name': 'ItemLinkTest', 
-                        'item_pool': linked_items, 
-                        'replacement_item': None, 
+                    world.options.item_links = ItemLinks([{     # Define a basic itemlink
+                        'name': 'ItemLinkTest',
+                        'item_pool': linked_items,
+                        'replacement_item': None,
                         'link_replacement': None,
                         }])
                 
@@ -102,9 +104,9 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                     world_items[player] = [item for item in self.multiworld.itempool if item.player == player]
 
                 # Act
-                prior_item_count = len(self.multiworld.itempool) # Get the total itempool size
-                self.multiworld.set_item_links()                # Run the function that creates the itempools
-                self.multiworld.calculate_item_links()          # Run the function that creates the item links
+                prior_item_count = len(self.multiworld.itempool)    # Get the total itempool size
+                self.multiworld.set_item_links()                    # Run the function that creates the itempools
+                self.multiworld.calculate_item_links()              # Run the function that creates the item links
                 # Assert Link was created and contains items
                 self.assertTrue(any(group['name'] == "ItemLinkTest" for group in self.multiworld.groups.values()),
                                 f"ItemLinkTest group not found in {self.multiworld.groups}")
@@ -114,9 +116,11 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                 self.assertEqual(link_group['item_pool'], set(linked_items),
                                  f"Item pool is not set correctly for {worldBase.game}")
                 self.assertEqual(len(self.multiworld.itempool), prior_item_count,
-                                 f"ItemPool length should stay the same {prior_item_count} not {len(self.multiworld.itempool)}")
+                                 f"ItemPool length should stay the same \
+                                    {prior_item_count} not {len(self.multiworld.itempool)}")
                 for player in range(1, self.multiworld.players+1):
                     new_world_items = [item for item in self.multiworld.itempool if item.player == player]
                     self.assertLessEqual(len(new_world_items), len(world_items[player]),
-                                         f"Item count for each player should be the same or less. We have {len(linked_items)} linked items")
+                                         f"Item count for each player should be the same or less. \
+                                            We have {len(linked_items)} linked items")
 
