@@ -17,20 +17,21 @@ edge_cases = [
         'LinkOne': {
             'name': 'ItemLinkTest',
             'item_pool': ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart',
-                           'Monarch_Wings', 'Shade_Cloak', 'Isma\'s_Tear'],
+                          'Monarch_Wings', 'Shade_Cloak', 'Isma\'s_Tear'],
             'replacement_item': None,
             'link_replacement': None,
         },
         'LinkTwo': {
             'name': 'ItemLinkTest',
             'item_pool': ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart',
-                           'Dream_Nail', 'Dream_Gate', 'Awoken_Dream_Nail'],
+                          'Dream_Nail', 'Dream_Gate', 'Awoken_Dream_Nail'],
             'replacement_item': None,
             'link_replacement': None,
         },
         'ExpectedLinkedItems': set(['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart']),
     },
 ]
+
 
 class ItemLinkTestBase(MultiworldTestBase):
     multiworld: MultiWorld
@@ -115,4 +116,3 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                     self.assertLessEqual(len(new_world_items), len(world_items[player]), 
                                          f"Item count for each player should be the same or less. We have {len(linked_items)} linked items")
                 # Assert Items are linked
-                
