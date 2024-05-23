@@ -64,11 +64,14 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                 self.multiworld.calculate_item_links()          # Run the function that creates the item links
 
                 # Assert
-                self.assertTrue(any(group['name'] == "ItemLinkTest" for group in self.multiworld.groups.values()), f"ItemLinkTest group not found in {self.multiworld.groups}")
+                self.assertTrue(any(group['name'] == "ItemLinkTest" for group in self.multiworld.groups.values()),
+                                 f"ItemLinkTest group not found in {self.multiworld.groups}")
                 link_group = [group for group in self.multiworld.groups.values() if group['name'] == "ItemLinkTest"][0]
 
-                self.assertEqual(link_group['game'], case['Game'], f"Game is not set correctly for {case['Game']}")
-                self.assertEqual(link_group['item_pool'], case['ExpectedLinkedItems'], f"Item pool is not set correctly for {case['Game']}")
+                self.assertEqual(link_group['game'], case['Game'], 
+                                 f"Game is not set correctly for {case['Game']}")
+                self.assertEqual(link_group['item_pool'], case['ExpectedLinkedItems'], 
+                                 f"Item pool is not set correctly for {case['Game']}")
     
     def test_all_games_items_link_defaults(self) -> None:
         """Tests that all worlds are able to link items to each other in a multiworld."""
