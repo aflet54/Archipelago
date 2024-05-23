@@ -73,12 +73,13 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                 self.assertEqual(link_group['item_pool'], case['ExpectedLinkedItems'], 
                                  f"Item pool is not set correctly for {case['Game']}")
     
+
     def test_all_games_items_link_defaults(self) -> None:
         """Tests that all worlds are able to link items to each other in a multiworld."""
-        # Prepare
+        #  Prepare
         for worldBase in AutoWorldRegister.world_types.values():
             with self.subTest(game=worldBase.game):
-                # Prepare our worlds and Set the Item Link information
+                #  Prepare our worlds and Set the Item Link information
                 worldOne = copy.deepcopy(worldBase)
                 worldTwo = copy.deepcopy(worldBase)
                 self.multiworld = setup_multiworld([worldOne, worldTwo], pre_link_steps)
@@ -105,17 +106,17 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
                 self.multiworld.set_item_links()                # Run the function that creates the itempools
                 self.multiworld.calculate_item_links()          # Run the function that creates the item links
                 # Assert Link was created and contains items
-                self.assertTrue(any(group['name'] == "ItemLinkTest" for group in self.multiworld.groups.values()), 
+                self.assertTrue(any(group['name'] == "ItemLinkTest" for group in self.multiworld.groups.values()),
                                 f"ItemLinkTest group not found in {self.multiworld.groups}")
                 link_group = [group for group in self.multiworld.groups.values() if group['name'] == "ItemLinkTest"][0]
-                self.assertEqual(link_group['game'], worldBase.game, 
+                self.assertEqual(link_group['game'], worldBase.game,
                                  f"Game is not set correctly for {worldBase.game}")
-                self.assertEqual(link_group['item_pool'], set(linked_items), 
+                self.assertEqual(link_group['item_pool'], set(linked_items),
                                  f"Item pool is not set correctly for {worldBase.game}")
-                self.assertEqual(len(self.multiworld.itempool), prior_item_count, 
+                self.assertEqual(len(self.multiworld.itempool), prior_item_count,
                                  f"ItemPool length should stay the same {prior_item_count} not {len(self.multiworld.itempool)}")
                 for player in range(1, self.multiworld.players+1):
                     new_world_items = [item for item in self.multiworld.itempool if item.player == player]
-                    self.assertLessEqual(len(new_world_items), len(world_items[player]), 
+                    self.assertLessEqual(len(new_world_items), len(world_items[player]),
                                          f"Item count for each player should be the same or less. We have {len(linked_items)} linked items")
-                # Assert Items are linked
+
