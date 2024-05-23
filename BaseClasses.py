@@ -280,7 +280,7 @@ class MultiWorld():
             self.worlds[player].options = options_dataclass(**{option_key: getattr(args, option_key)[player]
                                                                for option_key in options_dataclass.type_hints})
 
-    def set_item_links(self):
+    def set_item_links(self) -> None:
         from worlds import AutoWorld
 
         item_links = {}
@@ -370,7 +370,7 @@ class MultiWorld():
                     del (counters[player][item])
         return counters, classifications
 
-    def calculate_item_links(self):
+    def calculate_item_links(self) -> None:
         for group_id, group in self.groups.items():
             common_item_count, classifications = self.find_common_pool(group["players"], group["item_pool"])
             if not common_item_count:

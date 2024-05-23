@@ -1,43 +1,47 @@
 import copy
+import typing
 from BaseClasses import ItemClassification, MultiWorld
-from Fill import distribute_items_restrictive
+# from Fill import distribute_items_restrictive
 from Options import Accessibility, ItemLinks
 from test.multiworld.test_multiworlds import MultiworldTestBase
-from worlds.AutoWorld import AutoWorldRegister, call_all
-from worlds.generic import GenericWorld
+from worlds.AutoWorld import AutoWorldRegister, World
+# from worlds.generic import GenericWorld
 from ..general import setup_multiworld
 
 pre_link_steps = ("generate_early", "create_regions", "create_items", "set_rules", "generate_basic")
 
 edge_cases = [
-    {   
-        'Description' : 'Only items present in both Links should be shared',
+    {
+        'Description': 'Only items present in both Links should be shared',
         'Game': 'Hollow Knight',
-        'LinkOne' : {
+        'LinkOne': {
             'name': 'ItemLinkTest', 
-            'item_pool' : ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart', 'Monarch_Wings', 'Shade_Cloak', 'Isma\'s_Tear'], 
-            'replacement_item' : None, 
-            'link_replacement' : None,
+            'item_pool': ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart', 
+                           'Monarch_Wings', 'Shade_Cloak', 'Isma\'s_Tear'], 
+            'replacement_item': None, 
+            'link_replacement': None,
         },
-        'LinkTwo' : {
+        'LinkTwo': {
             'name': 'ItemLinkTest', 
-            'item_pool' : ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart', 'Dream_Nail', 'Dream_Gate', 'Awoken_Dream_Nail'], 
-            'replacement_item' : None, 
-            'link_replacement' : None,
+            'item_pool': ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart', 
+                           'Dream_Nail', 'Dream_Gate', 'Awoken_Dream_Nail'], 
+            'replacement_item': None, 
+            'link_replacement': None,
         },
-        'ExpectedLinkedItems' : set('Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart'),
+        'ExpectedLinkedItems': set(['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart']),
     },
 ]
 
 class ItemLinkTestBase(MultiworldTestBase):
     multiworld: MultiWorld
 
-    def get_progression_items(self, world : GenericWorld) -> list[str]:
+    def get_progression_items(self, world : typing.Type[World]) -> typing.List[str]:
         """Returns a list of items that are in the itempool of a world and considered progression."""
         item_list = []
         complete_item_list = world.item_name_groups["Everything"]
         for item in self.multiworld.itempool:
-            if item.name in complete_item_list and item.classification == ItemClassification.progression:
+            if item.name in complete_item_list and \
+                item.classification == ItemClassification.progression:
                 item_list.append(item.name)
             # if len(item_list) >= size:
             #     break
