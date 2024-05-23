@@ -10,7 +10,7 @@ from ..general import setup_multiworld
 
 pre_link_steps = ("generate_early", "create_regions", "create_items", "set_rules", "generate_basic")
 
-edge_cases = [
+edge_cases : list[dict[str, typing.Any]]= [
     {
         'Description': 'Only items present in both Links should be shared',
         'Game': 'Hollow Knight',
