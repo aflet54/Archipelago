@@ -9,6 +9,26 @@ from ..general import setup_multiworld
 
 pre_link_steps = ("generate_early", "create_regions", "create_items", "set_rules", "generate_basic")
 
+edge_cases = [
+    {   
+        'Description' : 'Only items present in both Links should be shared',
+        'Game': 'Hollow Knight',
+        'LinkOne' : {
+            'name': 'ItemLinkTest', 
+            'item_pool' : ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart', 'Monarch_Wings', 'Shade_Cloak', 'Isma\'s_Tear'], 
+            'replacement_item' : None, 
+            'link_replacement' : None,
+        },
+        'LinkTwo' : {
+            'name': 'ItemLinkTest', 
+            'item_pool' : ['Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart', 'Dream_Nail', 'Dream_Gate', 'Awoken_Dream_Nail'], 
+            'replacement_item' : None, 
+            'link_replacement' : None,
+        },
+        'ExpectedLinkedItems' : set('Mothwing_Cloack', 'Mantis_Claw', 'Crystal_Heart'),
+    },
+]
+
 class ItemLinkTestBase(MultiworldTestBase):
     multiworld: MultiWorld
 
@@ -23,13 +43,31 @@ class ItemLinkTestBase(MultiworldTestBase):
             #     break
         return item_list
 
-class TestTwoPlayerItemLink(ItemLinkTestBase):
-    def test_itemlink_default(self) -> None:
-        """Tests that various combinations of settings are loaded correctly"""
-        pass
 
+class TestTwoPlayerItemLink(ItemLinkTestBase):
+    def test_itemlink_edge_cases(self) -> None:
+        """Tests that various combinations of settings are loaded correctly"""
+        for case in edge_cases:
+            with self.subTest(game=case['Game'], description=case['Description']):
+                # Prepare
+                worldBase = AutoWorldRegister.world_types[case['Game']]
+                worldOne = copy.deepcopy(worldBase) # Create our test worlds
+                worldOne.options.item_links = ItemLinks([case['LinkOne']])
+                worldTwo = copy.deepcopy(worldBase)
+                worldTwo.options.item_links = ItemLinks([case['LinkTwo']])
+                self.multiworld = setup_multiworld([worldOne, worldTwo], pre_link_steps) # Create our test Multiworld
+                # Act
+                self.multiworld.set_item_links()                # Run the function that creates the itempools
+                self.multiworld.calculate_item_links()          # Run the function that creates the item links
+
+                # Assert
+                self.assertTrue(any(group['name'] == "ItemLinkTest" for group in self.multiworld.groups.values()), f"ItemLinkTest group not found in {self.multiworld.groups}")
+                link_group = [group for group in self.multiworld.groups.values() if group['name'] == "ItemLinkTest"][0]
+
+                self.assertEqual(link_group['game'], case['Game'], f"Game is not set correctly for {case['Game']}")
+                self.assertEqual(link_group['item_pool'], case['ExpectedLinkedItems'], f"Item pool is not set correctly for {case['Game']}")
     
-    def test_all_games_items_link(self) -> None:
+    def test_all_games_items_link_defaults(self) -> None:
         """Tests that all worlds are able to link items to each other in a multiworld."""
         # Prepare
         for worldBase in AutoWorldRegister.world_types.values():
