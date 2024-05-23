@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import copy
-import itertools
 import functools
 import logging
 import random
@@ -20,7 +19,7 @@ import Utils
 from worlds import AutoWorld
 
 # if typing.TYPE_CHECKING:
-    # from worlds import AutoWorld
+#     from worlds import AutoWorld
 
 
 class Group(TypedDict, total=False):
@@ -218,7 +217,7 @@ class MultiWorld():
             set_player_attr('game', "A Link to the Past")
             set_player_attr('completion_condition', lambda state: True)
         self.worlds = {}
-        self.per_slot_randoms = Utils.DeprecateDict("Using per_slot_randoms is now deprecated. Please use the "
+        self.per_slot_randoms = Utils.DeprecateDict("Using per_slot_randoms is now deprecated. Please use the ",
                                                       "world's random object instead (usually self.random)")
         self.plando_options = PlandoOptions.none
 
