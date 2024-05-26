@@ -1,16 +1,14 @@
 import copy
 import typing
 from BaseClasses import ItemClassification, MultiWorld
-# from Fill import distribute_items_restrictive
 from Options import Accessibility, ItemLinks
 from test.multiworld.test_multiworlds import MultiworldTestBase
 from worlds.AutoWorld import AutoWorldRegister, World
-# from worlds.generic import GenericWorld
 from ..general import setup_multiworld
 
 pre_link_steps = ("generate_early", "create_regions", "create_items", "set_rules", "generate_basic")
 
-edge_cases : list[dict[str, typing.Any]]= [
+edge_cases: typing.List[typing.Dict[str, typing.Any]] = [
     {
         'Description': 'Only items present in both Links should be shared',
         'Game': 'Hollow Knight',
@@ -42,7 +40,7 @@ class ItemLinkTestBase(MultiworldTestBase):
         complete_item_list = world.item_name_groups["Everything"]
         for item in self.multiworld.itempool:
             if item.name in complete_item_list and \
-            item.classification == ItemClassification.progression:
+               item.classification == ItemClassification.progression:
                 item_list.append(item.name)
         return item_list
 
@@ -51,10 +49,10 @@ class TestTwoPlayerItemLink(ItemLinkTestBase):
     def test_itemlink_edge_cases(self) -> None:
         """Tests that various combinations of settings are loaded correctly"""
         for case in edge_cases:
-            gameName : str = case['Game']
+            gameName: str = case['Game']
             with self.subTest(game=gameName, description=case['Description']):
                 # Prepare our worlds and Set the Item Link information
-                
+
                 worldBase = AutoWorldRegister.world_types[gameName]
                 worldOne = copy.deepcopy(worldBase)
                 worldOne.options.item_links = ItemLinks([case['LinkOne']])
