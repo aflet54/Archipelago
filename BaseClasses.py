@@ -16,7 +16,6 @@ from typing import Any, Callable, Dict, Iterable, Iterator, List, Mapping, Named
 import NetUtils
 import Options
 import Utils
-from worlds import AutoWorld
 
 # if typing.TYPE_CHECKING:
 #     from worlds import AutoWorld
@@ -318,6 +317,8 @@ class MultiWorld():
         return counters, classifications
 
     def calculate_item_links(self) -> None:
+        from worlds import AutoWorld
+        
         for group_id, group in self.groups.items():
             common_item_count, classifications = self.find_common_pool(group["players"], group["item_pool"])
             if not common_item_count:
